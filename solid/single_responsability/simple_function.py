@@ -27,11 +27,38 @@ users = [
 ]
 
 
-def get_user(user_name: str, is_admin: bool = False, consider_old_users: bool=False) -> User | User2 | Admin | None:
+def verify_admin(user: User2 | User) -> bool:
+    return isinstance(user, User2) and user.is_admin
+
+def verify_regular_user(user: User2 | User) -> bool:
+    return isinstance(user, User2) and user.is_admin is False
+
+
+def get_admin(user_name: str) -> Admin | None:
     for user in users:
-        if user_name == user.name:
-            if isinstance(user, User) and not consider_old_users:
-                continue
-            if isinstance(user, User2) and user.is_admin and not is_admin:
-                continue
+        if verify_admin(user) and user.name == user_name:
             return user
+
+
+def get_old_user(user_name: str) -> User:
+    for user in users:
+        if isinstance(user, User) and user.name == user_name:
+            return user
+
+
+def get_regular_user(user_name: str) -> User2:
+    for user in users:
+        if verify_regular_user(user) and user.name == user_name:
+            return user
+
+
+def get_user(user_name: str,
+             is_admin: bool = False,
+             consider_old_users: bool = False) -> User | User2 | Admin | None:
+    if is_admin:
+        return get_admin(user_name)
+    if consider_old_users:
+        return get_old_user(user_name)
+    return get_regular_user(user_name)
+
+
