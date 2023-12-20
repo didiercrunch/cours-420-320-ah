@@ -17,7 +17,7 @@ class BowlingCase:
         return isinstance(self.first_throw, int) and isinstance(self.second_throw, int)
 
     def is_spare(self):
-        return self.first_throw != 10 and self.score() == 10
+        return self.first_throw != 10 and self.score() >= 10
 
     def requires_extra_throw(self):
         if self.is_spare():
@@ -28,7 +28,9 @@ class BowlingCase:
         self.xtra_throw = throw
 
     def score(self):
-        return (self.first_throw or 0) + (self.second_throw or 0)
+        return ((self.first_throw or 0)
+                + (self.second_throw or 0)
+                + (self.xtra_throw or 0))
 
 
 class BowlingGame:
