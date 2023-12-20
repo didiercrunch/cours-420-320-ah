@@ -45,3 +45,73 @@ class BowlingGame:
 
     def score(self):
         return sum([case.score() for case in self._score])
+
+
+class BowlingGame2:
+    def __init__(self):
+        self.case = Case()
+
+    def last_case(self):
+        case = self.case
+        while case.next is not None:
+            case = case.next
+        return case
+
+    def add_case(self):
+        self.last_case().set_next(Case())
+
+    def throw(self, pins):
+        if self.last_case().is_completed():
+            self.add_case()
+        self.last_case().throw(pins)
+
+    def score(self):
+        ret = 0
+        case = self.case
+        while case is not None:
+            ret += case.score()
+            case = case.next
+        return ret;
+
+
+class Case:
+    def __init__(self):
+        self.next = None
+        self.first_throw = None
+        self.second_throw = None
+
+    def throw(self, pin):
+        if self.first_throw is None:
+            self.first_throw = pin
+        else:
+            self.second_throw = pin
+
+    def set_next(self, case):
+        self.next = case
+
+    def extra_score(self):
+        if self.next is None:
+            return 0
+        if self.is_spare():
+            return self.next.first_throw or 0
+        return 0
+
+    def is_completed(self):
+        if self.first_throw == 10:
+            return True
+        return (self.first_throw is not None
+                and self.second_throw is not None)
+
+    def is_spare(self):
+        return self.raw_score() == 10 and not self.is_strike()
+
+    def is_strike(self):
+        return self.raw_score() == 10
+
+    def raw_score(self):
+        return ((self.first_throw or 0)
+                + (self.first_throw or 0))
+
+    def score(self):
+        return self.raw_score() + self.extra_score()
+

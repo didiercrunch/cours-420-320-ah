@@ -1,4 +1,4 @@
-from tdd.bowling import BowlingGame
+from tdd.bowling import BowlingGame, BowlingGame2
 
 
 def test_new_game():
@@ -6,7 +6,7 @@ def test_new_game():
 
 
 def test_new_game_trivial():
-    bowling_game = BowlingGame()
+    bowling_game = BowlingGame2()
     bowling_game.throw(5)
     assert bowling_game.score() == 5
 
